@@ -482,7 +482,7 @@ void customSession()
 
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
-	myFile << "topology: 15 30 8" << '\n';
+	myFile << "topology: 15 7 8" << '\n';
 	for (int i = sessionCount; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
