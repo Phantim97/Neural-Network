@@ -471,7 +471,7 @@ void multiOut()
 	myFile.close();
 }
 
-void customValues()
+void customSession()
 {
 	int sessionCount = 0;
 	std::cout << "Enter the amount of training sessions: ";
