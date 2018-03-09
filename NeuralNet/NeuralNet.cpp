@@ -228,7 +228,7 @@ public:
 	Net(const std::vector<unsigned> &topology);
 	void feedForward(const std::vector<double> &inputVals); //pass by referece to not copy whole vector
 	void backProp(const std::vector<double> &targetVals);
-	void getResults(std::vector<double> &resultVals) const; //the vector is not const because we are writing vals to it
+	void getResults(std::vector<double> &resultVals, int outMode) const; //the vector is not const because we are writing vals to it
 	double getRecentAverageError(void) const { return m_recentAverageError; }; // training data function
 private:
 	std::vector<Layer> m_layers; //m_layers[layerNum][neuronNum] 2D vector,layer vector of neuron
@@ -237,15 +237,26 @@ private:
 	double m_recentAverageSmoothingFactor;
 };
 
-void Net::getResults(std::vector<double> &resultVals) const
+void Net::getResults(std::vector<double> &resultVals, int outMode) const
 {
 	resultVals.clear();
-
-	for (unsigned n = 0; n < m_layers.size() - 1; ++n)
+	if (outMode == 1)
 	{
-		resultVals.push_back(m_layers.back()[n].getOutputVal());
+		for (unsigned n = 0; n < m_layers.size() - 2; ++n) //-2 to remove bias neuron from output (single output)
+		{
+			resultVals.push_back(m_layers.back()[n].getOutputVal());
+		}
 	}
+	else if (outMode == 2)
+	{
+		for (unsigned n = 0; n < m_layers.size(); ++n) //size is the same for multiple outputs
+		{
+			resultVals.push_back(m_layers.back()[n].getOutputVal());
+		}
+	}
+
 }
+
 
 void Net::backProp(const std::vector<double> &targetVals)
 {
@@ -430,10 +441,34 @@ void testComplexDataMaking()
 	myFile.close();
 }
 
+void multiOut()
+{
+	std::ofstream myFile;
+	myFile.open("trainingData.txt");
+	myFile << "topology: 6 9 3" << '\n';
+	for (int i = 20000; i > 0; i--)
+	{
+		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n2 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n3 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n4 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n5 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n6 = (int)(2.0 * rand() / double(RAND_MAX));
+		int t1 = (n1 || n2) && n3;
+		int t2 = (n4 && n5) || n6;
+		int t3 = ((n1 || n2) && n3) && ((n4 && n5) || n6);
+		myFile << "in: " << n1 << ".0 " << n2 << ".0 " << n3 << ".0 " << n4 << ".0 " << n5 << ".0 " << n6 << ".0 " << '\n';
+		myFile << "out: " << t1 << ".0 " << t2 << ".0 "<< t3 << ".0 " <<'\n';
+	}
+
+	myFile.close();
+}
+
 int main()
 {
 	std::cout << "Welcome to the Neural Net\n";
-	std::cout << "[Select training: 1) xor, 2) and, 3) Complex, 4) Large Logic Construct]: ";
+	std::cout << "[Select training: 1) xor, 2) and, 3) Complex, 4) Large Logic Construct 5) Multi-Output Network]: ";
+	int oMode = 0;
 	int choice;
 	do
 	{
@@ -444,15 +479,23 @@ int main()
 	{
 	case (1):
 		makeXORData();
+		oMode = 1;
 		break;
 	case (2):
 		makeAndData();
+		oMode = 1;
 		break;
 	case (3):
 		makeComplexData();
+		oMode = 1;
 		break;
 	case (4):
 		testComplexDataMaking();
+		oMode = 1;
+		break;
+	case (5):
+		multiOut();
+		oMode = 2;
 		break;
 	}
 
@@ -477,7 +520,7 @@ int main()
 		myNet.feedForward(inputVals);
 
 		//Collect the net's actual results:
-		myNet.getResults(resultVals);
+		myNet.getResults(resultVals, oMode);
 		showVectorVals("Outputs: ", resultVals);
 
 		//Train the net what the outputs should have been:
