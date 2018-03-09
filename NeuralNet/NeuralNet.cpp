@@ -254,9 +254,16 @@ void Net::getResults(std::vector<double> &resultVals, int outMode) const
 			resultVals.push_back(m_layers.back()[n].getOutputVal());
 		}
 	}
+	else if (outMode == 3) //output = m_layers.size + (topology outputs - layer size)
+	{
+		for (unsigned n = 0; n < m_layers.size() + 5; ++n) //ex output size 8 layer size 3 so 3 + 5 = 8 outputs
+		{
+			resultVals.push_back(m_layers.back()[n].getOutputVal());
+		}
+	}
 
 }
-
+}
 
 void Net::backProp(const std::vector<double> &targetVals)
 {
@@ -464,16 +471,65 @@ void multiOut()
 	myFile.close();
 }
 
+void customValues()
+{
+	int sessionCount = 0;
+	std::cout << "Enter the amount of training sessions: ";
+	do
+	{
+		std::cin >> sessionCount;
+	} while (sessionCount < 0);
+
+	std::ofstream myFile;
+	myFile.open("trainingData.txt");
+	myFile << "topology: 15 30 8" << '\n';
+	for (int i = sessionCount; i > 0; i--)
+	{
+		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n2 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n3 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n4 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n5 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n6 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n7 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n8 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n9 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n10 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n11 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n12 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n13 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n14 = (int)(2.0 * rand() / double(RAND_MAX));
+		int n15 = (int)(2.0 * rand() / double(RAND_MAX));
+
+		int t1 = (n1 || n2) && n3;
+		int t2 = (n4 && n5) || n6;
+		int t3 = ((n1 || n2) && n3) && ((n4 && n5) || n6);
+		int t4 = (n7 || n8) && n9;
+		int t5 = (n10 && n11) || n12;
+		int t6 = ((n7 || n8) && n9) && ((n10 && n11) || n12);
+		int t7 = (n13 && n14) || n15;
+		int t8 = (t3 || t6) && t7;
+		
+		myFile << "in: " << n1 << ".0 " << n2 << ".0 " << n3 << ".0 " << n4 << ".0 " << n5 << ".0 " << n6 << ".0 " <<
+			n7 << ".0 " << n8 << ".0 " << n9 << ".0 " << n10 << ".0 " << n11 << ".0 " << n12 << ".0 " << n13 << ".0 "
+			<< n14 << ".0 " << n15 << ".0 " << '\n';
+		myFile << "out: " << t1 << ".0 " << t2 << ".0 " << t3 << ".0 " << t4 << ".0 " << t5 << ".0 " << t6 << ".0 "
+			<< t7 << ".0 " << t8 << ".0 " << '\n';
+	}
+
+	myFile.close();
+}
+
 int main()
 {
 	std::cout << "Welcome to the Neural Net\n";
-	std::cout << "[Select training: 1) xor, 2) and, 3) Complex, 4) Large Logic Construct 5) Multi-Output Network]: ";
+	std::cout << "[Select training: 1) xor, 2) and, 3) Complex, 4) Large Logic Construct, 5) Multi-Output Network, 6) Custom Session]: ";
 	int oMode = 0;
 	int choice;
 	do
 	{
 		std::cin >> choice;
-	} while (choice != 1 && choice != 2 && choice != 3 && choice != 4);
+	} while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6);
 
 	switch (choice)
 	{
@@ -497,6 +553,10 @@ int main()
 		multiOut();
 		oMode = 2;
 		break;
+	case (6):
+		customeSession();
+		oMode = 3;
+		break;
 	}
 
 	TrainingData trainData("trainingData.txt");
@@ -512,7 +572,7 @@ int main()
 		std::cout << '\n' << "Pass: " << trainingPass;
 
 		//Get new input data and feed it forward:
-			if(trainData.getNextInputs(inputVals) != topology[0])
+			if (trainData.getNextInputs(inputVals) != topology[0])
 			{
 				break;
 			}
