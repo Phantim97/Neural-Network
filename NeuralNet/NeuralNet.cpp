@@ -379,7 +379,13 @@ void makeXORData() // makes training data
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 2 4 1" << '\n';
-	for (int i = 5; i > 0; i--)
+	int sessions;
+	std::cout << "Enter Number of training sessions: ";
+	do
+	{
+		std::cin >> sessions;
+	} while (sessions > 0);
+	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
 		int n2 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -396,7 +402,13 @@ void makeAndData()
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 2 4 1" << '\n';
-	for (int i = 10; i > 0; i--)
+	int sessions;
+	std::cout << "Enter Number of training sessions: ";
+	do
+	{
+		std::cin >> sessions;
+	} while (sessions > 0);
+	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
 		int n2 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -413,7 +425,13 @@ void makeComplexData()
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 3 4 1" << '\n';
-	for (int i = 1000; i > 0; i--)
+	int sessions;
+	std::cout << "Enter Number of training sessions: ";
+	do
+	{
+		std::cin >> sessions;
+	} while (sessions > 0);
+	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
 		int n2 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -431,7 +449,13 @@ void testComplexDataMaking()
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 6 7 1" << '\n';
-	for (int i = 20000; i > 0; i--)
+	int sessions;
+	std::cout << "Enter Number of training sessions: ";
+	do
+	{
+		std::cin >> sessions;
+	} while (sessions > 0);
+	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
 		int n2 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -453,7 +477,13 @@ void multiOut()
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 6 9 3" << '\n';
-	for (int i = 20000; i > 0; i--)
+	int sessions;
+	std::cout << "Enter Number of training sessions: ";
+	do
+	{
+		std::cin >> sessions;
+	} while (sessions > 0);
+	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
 		int n2 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -471,7 +501,7 @@ void multiOut()
 	myFile.close();
 }
 
-void customSession()
+void multiOut2()
 {
 	int sessionCount = 0;
 	std::cout << "Enter the amount of training sessions: ";
@@ -523,7 +553,7 @@ void customSession()
 int main()
 {
 	std::cout << "Welcome to the Neural Net\n";
-	std::cout << "[Select training: 1) xor, 2) and, 3) Complex, 4) Large Logic Construct, 5) Multi-Output Network, 6) Custom Session]: ";
+	std::cout << "[Select training: 1) xor, 2) and, 3) Complex, 4) Large Logic Construct, 5) Multi-Output Network, 6) Multi-Out 2]: ";
 	int oMode = 0;
 	int choice;
 	do
@@ -554,7 +584,7 @@ int main()
 		oMode = 2;
 		break;
 	case (6):
-		customeSession();
+		multiOut2();
 		oMode = 3;
 		break;
 	}
