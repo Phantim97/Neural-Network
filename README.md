@@ -7,5 +7,4 @@ Current Features:
 
 Features for the future:
 -Multiple AI's training at once + comparrison
--Custom amount of training sessions for all cases
 -More training Algorithms
