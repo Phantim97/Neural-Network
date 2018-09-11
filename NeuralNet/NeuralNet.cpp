@@ -7,6 +7,12 @@
 #include <fstream> //for text file writing
 #include <sstream> //stringstream although string may suffice
 
+class InvalidInputException
+{
+public:
+	void getErrorMessage() { std::cout << "Error value must be an integer\n"; }
+};
+
 //Class to read training data from a file
 class TrainingData
 {
@@ -240,6 +246,7 @@ private:
 void Net::getResults(std::vector<double> &resultVals, int outMode) const
 {
 	resultVals.clear();
+
 	if (outMode == 1)
 	{
 		for (unsigned n = 0; n < m_layers.size() - 2; ++n) //-2 to remove bias neuron from output (single output)
@@ -262,7 +269,6 @@ void Net::getResults(std::vector<double> &resultVals, int outMode) const
 		}
 	}
 
-}
 }
 
 void Net::backProp(const std::vector<double> &targetVals)
@@ -315,7 +321,6 @@ void Net::backProp(const std::vector<double> &targetVals)
 		}
 	}
 }
-
 
 //feeds values forward
 void Net::feedForward(const std::vector<double> &inputVals)
@@ -379,12 +384,27 @@ void makeXORData() // makes training data
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 2 4 1" << '\n';
-	int sessions;
+	int sessions = 0;
 	std::cout << "Enter Number of training sessions: ";
 	do
 	{
-		std::cin >> sessions;
-	} while (sessions > 0);
+		try
+		{
+			std::cin >> sessions;
+			if (std::cin.fail())
+			{
+				throw InvalidInputException();
+			}
+		}
+		catch (InvalidInputException e)
+		{
+			e.getErrorMessage();
+			std::cin.clear();
+			std::cin.ignore(99999, '\n');
+		}
+		
+	} while (sessions <= 0);
+
 	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -402,12 +422,26 @@ void makeAndData()
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 2 4 1" << '\n';
-	int sessions;
+	int sessions = 0;
 	std::cout << "Enter Number of training sessions: ";
 	do
 	{
-		std::cin >> sessions;
-	} while (sessions > 0);
+		try
+		{
+			std::cin >> sessions;
+			if (std::cin.fail())
+			{
+				throw InvalidInputException();
+			}
+		}
+		catch (InvalidInputException e)
+		{
+			e.getErrorMessage();
+			std::cin.clear();
+			std::cin.ignore(99999, '\n');
+		}
+	} while (sessions <= 0);
+
 	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -429,8 +463,22 @@ void makeComplexData()
 	std::cout << "Enter Number of training sessions: ";
 	do
 	{
-		std::cin >> sessions;
-	} while (sessions > 0);
+		try
+		{
+			std::cin >> sessions;
+			if (std::cin.fail())
+			{
+				throw InvalidInputException();
+			}
+		}
+		catch (InvalidInputException e)
+		{
+			e.getErrorMessage();
+			std::cin.clear();
+			std::cin.ignore(99999, '\n');
+		}
+	} while (sessions <= 0);
+
 	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -449,12 +497,26 @@ void testComplexDataMaking()
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 6 7 1" << '\n';
-	int sessions;
+	int sessions = 0;
 	std::cout << "Enter Number of training sessions: ";
 	do
 	{
-		std::cin >> sessions;
-	} while (sessions > 0);
+		try
+		{
+			std::cin >> sessions;
+			if (std::cin.fail())
+			{
+				throw InvalidInputException();
+			}
+		}
+		catch (InvalidInputException e)
+		{
+			e.getErrorMessage();
+			std::cin.clear();
+			std::cin.ignore(99999, '\n');
+		}
+	} while (sessions <= 0);
+
 	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -477,12 +539,26 @@ void multiOut()
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
 	myFile << "topology: 6 9 3" << '\n';
-	int sessions;
-	std::cout << "Enter Number of training sessions: ";
+	int sessions = 0;
 	do
 	{
-		std::cin >> sessions;
-	} while (sessions > 0);
+		try
+		{
+			std::cout << "Enter Number of training sessions: ";
+			std::cin >> sessions;
+			if (std::cin.fail())
+			{
+				throw InvalidInputException();
+			}
+		}
+		catch (InvalidInputException e)
+		{
+			e.getErrorMessage();
+			std::cin.clear();
+			std::cin.ignore(99999, '\n');
+		}
+	} while (sessions <= 0);
+
 	for (int i = sessions; i > 0; i--)
 	{
 		int n1 = (int)(2.0 * rand() / double(RAND_MAX));
@@ -501,14 +577,27 @@ void multiOut()
 	myFile.close();
 }
 
-void multiOut2()
+void customValues()
 {
 	int sessionCount = 0;
 	std::cout << "Enter the amount of training sessions: ";
 	do
 	{
-		std::cin >> sessionCount;
-	} while (sessionCount < 0);
+		try
+		{
+			std::cin >> sessionCount;
+			if (std::cin.fail())
+			{
+				throw InvalidInputException();
+			}
+		}
+		catch (InvalidInputException e)
+		{
+			e.getErrorMessage();
+			std::cin.clear();
+			std::cin.ignore(99999, '\n');
+		}
+	} while (sessionCount <= 0);
 
 	std::ofstream myFile;
 	myFile.open("trainingData.txt");
@@ -538,7 +627,8 @@ void multiOut2()
 		int t5 = (n10 && n11) || n12;
 		int t6 = ((n7 || n8) && n9) && ((n10 && n11) || n12);
 		int t7 = (n13 && n14) || n15;
-		int t8 = (t3 || t6) && t7;
+		int t8 = ((((n1 || n2) && n3) && ((n4 && n5) || n6)) || ((n7 || n8) && n9) && ((n10 && n11) || n12)) && 
+			((n13 && n14) || n15);
 		
 		myFile << "in: " << n1 << ".0 " << n2 << ".0 " << n3 << ".0 " << n4 << ".0 " << n5 << ".0 " << n6 << ".0 " <<
 			n7 << ".0 " << n8 << ".0 " << n9 << ".0 " << n10 << ".0 " << n11 << ".0 " << n12 << ".0 " << n13 << ".0 "
@@ -555,10 +645,23 @@ int main()
 	std::cout << "Welcome to the Neural Net\n";
 	std::cout << "[Select training: 1) xor, 2) and, 3) Complex, 4) Large Logic Construct, 5) Multi-Output Network, 6) Multi-Out 2]: ";
 	int oMode = 0;
-	int choice;
+	int choice = 0;
 	do
 	{
-		std::cin >> choice;
+		try
+		{
+			std::cin >> choice;
+			if (std::cin.fail())
+			{
+				throw InvalidInputException();
+			}
+		}
+		catch (InvalidInputException e)
+		{
+			e.getErrorMessage();
+			std::cin.clear();
+			std::cin.ignore(99999, '\n');
+		}
 	} while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6);
 
 	switch (choice)
@@ -584,7 +687,7 @@ int main()
 		oMode = 2;
 		break;
 	case (6):
-		multiOut2();
+		customValues();
 		oMode = 3;
 		break;
 	}
